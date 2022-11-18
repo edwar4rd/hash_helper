@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>hash helper</title>
+</head>
+
+<body>
+    <label for="uid">Your discord user id:</label><br>
+    <input type="text" id="uid" name="uid"><br>
+    <label for="cmd">Target bot command:</label><br>
+    <input type="text" id="cmd" name="cmd"><br>
+    <label for="pswd">Password:</label><br>
+    <input type="password" id="pswd" name="pswd">
+    <input type="button" value="Hash!" id="hash_btn">
+    <br>
+    <b>YOUR HASH IS <code id="hash_display"></code></b>
+</body>
+
+<script>
+    function sha512(str) {
+        return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
+            return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('');
+        });
+    }
+
+    document.getElementById("hash_btn").addEventListener('click', async () => {
+        if (Number.isInteger(Number(document.getElementById("uid").value)) && (document.getElementById("uid").value + 0 >= 4194304)) {
+            document.getElementById("hash_display").innerText = await sha512(document.getElementById("cmd").value + ' ' + String(Date.now()).substring(0, 8) + ' ' + document.getElementById("uid").value + ' ' + document.getElementById("pswd").value + '\n');
+        } else {
+            document.getElementById("hash_display").innerText = "";
+        }
+    });
+</script>
+
+</html>
